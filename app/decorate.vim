@@ -11,14 +11,14 @@ function! decorate#DecorateLine(...)
     let a:padLeft       = get(a:000, 3, 1)
     let a:padRight      = get(a:000, 4, a:padLeft)
     let a:endComm       = get(a:000, 5, 1)
+    let a:lineLen       = get(a:000, 6, &colorcolumn !=# '' ? &colorcolumn : 80)
     " }}}
 
     " Variables {{{
     let hdrLen          = virtcol('$') - 1
-    let lineLen         = &colorcolumn !=# "" ? &colorcolumn - 1 : 80
     let commLeftLen     = strlen(a:comm)
     let commRightLen    = (a:endComm ? commLeftLen : 0)
-    let maxHdrLen       = lineLen
+    let maxHdrLen       = a:lineLen
     let maxHdrLen       -= a:padLeft
     let maxHdrLen       -= a:padRight
     let maxHdrLen       -= commLeftLen
@@ -35,7 +35,7 @@ function! decorate#DecorateLine(...)
 
     " More variables {{{
     let decLeftLen      = strlen(a:decLeft)
-    let byteLeftLen     = ((lineLen + 1) / 2)   " First two lines of expression
+    let byteLeftLen     = ((a:lineLen + 1) / 2) " First two lines of expression
     let byteLeftLen     -= ((hdrLen + 1) / 2)   " not simplified to take
     let byteLeftLen     -= a:padLeft            " advantage of integer division
     let byteLeftLen     -= commLeftLen          " truncation
@@ -43,7 +43,7 @@ function! decorate#DecorateLine(...)
     let bdrLeftMod      = byteLeftLen % decLeftLen
     let bdrLeftXtra     = bdrLeftMod > 0 ? a:decLeft[-bdrLeftMod:] : ''
     let decRightLen     = strlen(a:decRight)
-    let byteRightLen    = (lineLen / 2)         " First two lines of expression
+    let byteRightLen    = (a:lineLen / 2)       " First two lines of expression
     let byteRightLen    -= (hdrLen / 2)         " not simplified to take
     let byteRightLen    -= a:padRight           " advantage of integer division
     let byteRightLen    -= commRightLen         " truncation
@@ -78,8 +78,8 @@ function! decorate#DecorateLine(...)
         echom '    padLeft..........' . a:padLeft
         echom '    padRight.........' . a:padRight
         echom '    endComm..........' . a:endComm
+        echom '    lineLen..........' . a:lineLen
         echom '    hdrLen...........' . hdrLen
-        echom '    lineLen..........' . lineLen
         echom '    commLeftLen......' . commLeftLen
         echom '    commRightLen.....' . commRightLen
         echom '    maxHdrLen........' . maxHdrLen
