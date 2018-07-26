@@ -3,21 +3,24 @@ let s:debug = 0
 function! decorate#DecorateLine(...)
 
     " Parameters {{{
-    let a:comm          = get(a:000, 0, '"')
-    let a:decLeft       = get(a:000, 1, '~')
-    let a:decRight      = get(a:000,
-                        \   2,
-                        \   join(reverse(split(a:decLeft, '\zs')), ''))
-    let a:padLeft       = get(a:000, 3, 1)
-    let a:padRight      = get(a:000, 4, a:padLeft)
-    let a:endComm       = get(a:000, 5, 1)
+    let a:commLeft      = get(a:000, 0, '"')
+    let a:decLeft       = a:0 < 2 || a:2 !=# '' ? get(a:000, 1, ' ') : ' '
+    let a:padLeft       = get(a:000, 2, 1)
+    let a:padRight      = get(a:000, 3, a:padLeft)
+    let a:decRight      = a:0 < 5 || a:5 !=# '' ?
+                        \   get(
+                        \       a:000,
+                        \       4,
+                        \       join(reverse(split(a:decLeft, '\zs')), '')) :
+                        \   join(reverse(split(a:decLeft, '\zs')), '')
+    let a:commRight     = get(a:000, 5, '')
     let a:lineLen       = get(a:000, 6, &colorcolumn !=# '' ? &colorcolumn : 80)
     " }}}
 
     " Variables {{{
     let hdrLen          = virtcol('$') - 1
-    let commLeftLen     = strlen(a:comm)
-    let commRightLen    = (a:endComm ? commLeftLen : 0)
+    let commLeftLen     = strlen(a:commLeft)
+    let commRightLen    = strlen(a:commRight)
     let maxHdrLen       = a:lineLen
     let maxHdrLen       -= a:padLeft
     let maxHdrLen       -= a:padRight
@@ -57,13 +60,13 @@ function! decorate#DecorateLine(...)
     let cmd             .= repeat(' ', a:padRight)
     let cmd             .= repeat(a:decRight, bdrRightLen)
     let cmd             .= bdrRightXtra
-    let cmd             .= (a:endComm ? a:comm : '')
+    let cmd             .= a:commRight
     let cmd             .= "\<ESC>0i"
-    let cmd             .= a:comm
+    let cmd             .= a:commLeft
     let cmd             .= bdrLeftXtra
     let cmd             .= repeat(a:decLeft, bdrLeftLen)
     let cmd             .= repeat(' ', a:padLeft)
-    let cmd             .= "\<ESC>\<CR>"
+    let cmd             .= "\<ESC>:s/\\s\\+$//e\<CR>"
     " }}}
 
     " Print parameters and variables for debugging {{{
@@ -72,12 +75,12 @@ function! decorate#DecorateLine(...)
         echom '=====================' . '======'
         echom '    Variable         ' . 'Value'
         echom '    -----------------' . '------'
-        echom '    comm.............' . a:comm
+        echom '    commLeft.........' . a:commLeft
         echom '    decLeft..........' . a:decLeft
-        echom '    decRight.........' . a:decRight
         echom '    padLeft..........' . a:padLeft
         echom '    padRight.........' . a:padRight
-        echom '    endComm..........' . a:endComm
+        echom '    decRight.........' . a:decRight
+        echom '    rightComm........' . a:commRight
         echom '    lineLen..........' . a:lineLen
         echom '    hdrLen...........' . hdrLen
         echom '    commLeftLen......' . commLeftLen
