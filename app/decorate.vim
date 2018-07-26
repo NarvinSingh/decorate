@@ -1,9 +1,7 @@
-" Utlity and sample mappings {{{
-nnoremap <leader>w :w<cr>:source %<cr>
-nnoremap <leader>H :call <SID>DecorateHeader('"', '~/')<CR>
-" }}}
+let s:debug = 0
 
-function! s:DecorateHeader(...)
+function! decorate#DecorateLine(...)
+
     " Parameters {{{
     let a:comm          = get(a:000, 0, '"')
     let a:decLeft       = get(a:000, 1, '~')
@@ -53,49 +51,52 @@ function! s:DecorateHeader(...)
     let bdrRightMod     = byteRightLen % decRightLen
     let bdrRightXtra    = bdrRightMod > 0 ? a:decRight[0:bdrRightMod - 1] : ''
     " }}}
+
+    " The command {{{
     let cmd             = 'normal! A'
     let cmd             .= repeat(' ', a:padRight)
     let cmd             .= repeat(a:decRight, bdrRightLen)
     let cmd             .= bdrRightXtra
     let cmd             .= (a:endComm ? a:comm : '')
-    let cmd             .= "\<ESC>I"
+    let cmd             .= "\<ESC>0i"
     let cmd             .= a:comm
     let cmd             .= bdrLeftXtra
     let cmd             .= repeat(a:decLeft, bdrLeftLen)
     let cmd             .= repeat(' ', a:padLeft)
     let cmd             .= "\<ESC>\<CR>"
-
-    execute cmd
-
-    return
+    " }}}
 
     " Print parameters and variables for debugging {{{
-    echom 'DecorateHeader'
-    echom '=====================' . '======'
-    echom '    Variable         ' . 'Value'
-    echom '    -----------------' . '------'
-    echom '    comm.............' . a:comm
-    echom '    decLeft..........' . a:decLeft
-    echom '    decRight.........' . a:decRight
-    echom '    padLeft..........' . a:padLeft
-    echom '    padRight.........' . a:padRight
-    echom '    endComm..........' . a:endComm
-    echom '    hdrLen...........' . hdrLen
-    echom '    lineLen..........' . lineLen
-    echom '    commLeftLen......' . commLeftLen
-    echom '    commRightLen.....' . commRightLen
-    echom '    maxHdrLen........' . maxHdrLen
-    echom '    decLeftLen.......' . decLeftLen
-    echom '    byteLeftLen......' . byteLeftLen
-    echom '    bdrLeftLen.......' . bdrLeftLen
-    echom '    bdrLeftMod.......' . bdrLeftMod
-    echom '    bdrLeftXtra......' . bdrLeftXtra
-    echom '    decRightLen......' . decRightLen
-    echom '    byteRightLen.....' . byteRightLen
-    echom '    bdrRightLen......' . bdrRightLen
-    echom '    bdrRightMod......' . bdrRightMod
-    echom '    bdrRightXtra.....' . bdrRightXtra
-    echom '    cmd..............' . cmd
-    echom ''
+    if s:debug
+        echom 'DecorateHeader'
+        echom '=====================' . '======'
+        echom '    Variable         ' . 'Value'
+        echom '    -----------------' . '------'
+        echom '    comm.............' . a:comm
+        echom '    decLeft..........' . a:decLeft
+        echom '    decRight.........' . a:decRight
+        echom '    padLeft..........' . a:padLeft
+        echom '    padRight.........' . a:padRight
+        echom '    endComm..........' . a:endComm
+        echom '    hdrLen...........' . hdrLen
+        echom '    lineLen..........' . lineLen
+        echom '    commLeftLen......' . commLeftLen
+        echom '    commRightLen.....' . commRightLen
+        echom '    maxHdrLen........' . maxHdrLen
+        echom '    decLeftLen.......' . decLeftLen
+        echom '    byteLeftLen......' . byteLeftLen
+        echom '    bdrLeftLen.......' . bdrLeftLen
+        echom '    bdrLeftMod.......' . bdrLeftMod
+        echom '    bdrLeftXtra......' . bdrLeftXtra
+        echom '    decRightLen......' . decRightLen
+        echom '    byteRightLen.....' . byteRightLen
+        echom '    bdrRightLen......' . bdrRightLen
+        echom '    bdrRightMod......' . bdrRightMod
+        echom '    bdrRightXtra.....' . bdrRightXtra
+        echom '    cmd..............' . cmd
+        echom ''
+    endif
     " }}}
+
+    execute cmd
 endfunction
