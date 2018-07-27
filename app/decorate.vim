@@ -5,7 +5,7 @@ function! decorate#DecorateLine(...)
     " Parameters {{{
     let a:commLeft      = get(a:000, 0, '"')
     let a:decLeft       = a:0 < 2 || a:2 !=# '' ? get(a:000, 1, ' ') : ' '
-    let a:padLeft       = get(a:000, 2, 1)
+    let a:padLeft       = get(a:000, 2, ' ')
     let a:padRight      = get(a:000, 3, a:padLeft)
     let a:decRight      = a:0 < 5 || a:5 !=# '' ?
                         \   get(
@@ -21,9 +21,11 @@ function! decorate#DecorateLine(...)
     let hdrLen          = virtcol('$') - 1
     let commLeftLen     = strlen(a:commLeft)
     let commRightLen    = strlen(a:commRight)
+    let padLeftLen      = strlen(a:padLeft)
+    let padRightLen     = strlen(a:padRight)
     let maxHdrLen       = a:lineLen
-    let maxHdrLen       -= a:padLeft
-    let maxHdrLen       -= a:padRight
+    let maxHdrLen       -= padLeftLen
+    let maxHdrLen       -= padRightLen
     let maxHdrLen       -= commLeftLen
     let maxHdrLen       -= commRightLen
     " }}}
@@ -40,7 +42,7 @@ function! decorate#DecorateLine(...)
     let decLeftLen      = strlen(a:decLeft)
     let byteLeftLen     = ((a:lineLen + 1) / 2) " First two lines of expression
     let byteLeftLen     -= ((hdrLen + 1) / 2)   " not simplified to take
-    let byteLeftLen     -= a:padLeft            " advantage of integer division
+    let byteLeftLen     -= padLeftLen           " advantage of integer division
     let byteLeftLen     -= commLeftLen          " truncation
     let bdrLeftLen      = byteLeftLen / decLeftLen
     let bdrLeftMod      = byteLeftLen % decLeftLen
@@ -48,7 +50,7 @@ function! decorate#DecorateLine(...)
     let decRightLen     = strlen(a:decRight)
     let byteRightLen    = (a:lineLen / 2)       " First two lines of expression
     let byteRightLen    -= (hdrLen / 2)         " not simplified to take
-    let byteRightLen    -= a:padRight           " advantage of integer division
+    let byteRightLen    -= padRightLen          " advantage of integer division
     let byteRightLen    -= commRightLen         " truncation
     let bdrRightLen     = byteRightLen / decRightLen
     let bdrRightMod     = byteRightLen % decRightLen
@@ -57,7 +59,7 @@ function! decorate#DecorateLine(...)
 
     " The command {{{
     let cmd             = 'normal! A'
-    let cmd             .= repeat(' ', a:padRight)
+    let cmd             .= a:padRight
     let cmd             .= repeat(a:decRight, bdrRightLen)
     let cmd             .= bdrRightXtra
     let cmd             .= a:commRight
@@ -65,8 +67,9 @@ function! decorate#DecorateLine(...)
     let cmd             .= a:commLeft
     let cmd             .= bdrLeftXtra
     let cmd             .= repeat(a:decLeft, bdrLeftLen)
-    let cmd             .= repeat(' ', a:padLeft)
+    let cmd             .= a:padLeft
     let cmd             .= "\<ESC>:s/\\s\\+$//e\<CR>"
+    let cmd             .= ":echo<CR>"
     " }}}
 
     " Print parameters and variables for debugging {{{
@@ -85,6 +88,8 @@ function! decorate#DecorateLine(...)
         echom '    hdrLen...........' . hdrLen
         echom '    commLeftLen......' . commLeftLen
         echom '    commRightLen.....' . commRightLen
+        echom '    padLeftLen  .....' . padLeftLen
+        echom '    padRightLen .....' . padRightLen
         echom '    maxHdrLen........' . maxHdrLen
         echom '    decLeftLen.......' . decLeftLen
         echom '    byteLeftLen......' . byteLeftLen
