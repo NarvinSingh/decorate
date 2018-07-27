@@ -118,13 +118,13 @@ function! decorate#DecorateLine(...)
     let cmd             .= repeat(a:decRight, bdrRightLen)
     let cmd             .= bdrRightXtra
     let cmd             .= a:commRight
-    let cmd             .= "\<ESC>0i"
+    let cmd             .= "\<esc>0i"
     let cmd             .= a:commLeft
     let cmd             .= bdrLeftXtra
     let cmd             .= repeat(a:decLeft, bdrLeftLen)
     let cmd             .= a:padLeft
-    let cmd             .= "\<ESC>:s/\\s\\+$//e\<CR>"
-    let cmd             .= ":echo<CR>"
+    let cmd             .= "\<esc>:s/\\s\\+$//e\<cr>"
+    let cmd             .= ":echo<cr>"
     " }}}
 
     " Print parameters and variables for debugging {{{
@@ -139,7 +139,7 @@ function! decorate#DecorateLine(...)
         echom '    padRight.........' . '<' .a:padRight . '>'
         echom '    decRight.........' . '<' .a:decRight . '>'
         echom '    rightComm........' . '<' .a:commRight . '>'
-        echom '    just.....     ...' . '<' .a:just . '>'
+        echom '    just.............' . '<' .a:just . '>'
         echom '    lineLen..........' . a:lineLen
         echom '    hdrLen...........' . hdrLen
         echom '    commLeftLen......' . commLeftLen
