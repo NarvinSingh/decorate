@@ -1,5 +1,15 @@
 let s:debug = 0
 
+function! decorate#DecorateTurnDebugOn()
+    let s:debug = 1
+    echo 'Debug on for decorate'
+endfunction
+
+function! decorate#DecorateTurnDebugOff()
+    let s:debug = 0
+    echo 'Debug off for decorate'
+endfunction
+
 function! decorate#DecorateLine(...)
 
     " Parameters {{{
