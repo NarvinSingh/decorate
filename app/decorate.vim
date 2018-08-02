@@ -135,7 +135,7 @@ function! decorate#DecorateLine(...)
     let cmd             .= repeat(a:decLeft, bdrLeftLen)
     let cmd             .= a:padLeft
     let cmd             .= "\<ESC>:s/\\s\\+$//e\<CR>"
-    let cmd             .= ":echo\<CR>"
+    let cmd             .= ":echo ''\<CR>"
     " }}}
 
     " Print parameters and variables for debugging {{{
