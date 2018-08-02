@@ -123,18 +123,19 @@ function! decorate#DecorateLine(...)
     " }}}
 
     " The command {{{
-    let cmd             = 'normal! A'
+    let cmd             = 'normal! '
+    let cmd             .= 'A'
     let cmd             .= a:padRight
     let cmd             .= repeat(a:decRight, bdrRightLen)
     let cmd             .= bdrRightXtra
     let cmd             .= a:commRight
-    let cmd             .= "\<esc>0i"
+    let cmd             .= "\<ESC>0i"
     let cmd             .= a:commLeft
     let cmd             .= bdrLeftXtra
     let cmd             .= repeat(a:decLeft, bdrLeftLen)
     let cmd             .= a:padLeft
-    let cmd             .= "\<esc>:s/\\s\\+$//e\<cr>"
-    let cmd             .= ":echo<cr>"
+    let cmd             .= "\<ESC>:s/\\s\\+$//e\<CR>"
+    let cmd             .= ":echo\<CR>"
     " }}}
 
     " Print parameters and variables for debugging {{{
